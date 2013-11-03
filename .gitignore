@@ -1,6 +1,7 @@
 *.pyc
 *.swp
 config.py
+alembic.ini
 env/
 db/
 *.db

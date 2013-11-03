@@ -7,6 +7,7 @@ MySQL-python
 SQLAlchemy==0.7
 WTForms
 Werkzeug
+alembic
 argparse
 distribute
 wsgiref
