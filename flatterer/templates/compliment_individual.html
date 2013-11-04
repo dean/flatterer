@@ -3,13 +3,6 @@
     <title>{{name}}, you are awesome!</title>
 {% endblock %}
 
-{% if not theme.theme_path %}
-<style type="text/css">
-    body {
-        background: url({{url_for('static', filename='BG.jpg') }}) no-repeat fixed;
-    }
-</style>
-{% endif %}
 
 {% block scripts %}
 <script type="text/javascript">
@@ -27,16 +20,34 @@
 {% endblock %}
 
 {% block content %}
+
+    {% if theme.theme_path %}
+    <style type="text/css">
+        body {
+            background: url({{theme.theme_path}});
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+        }
+    </style>
+    {% endif %}
+
     <h1>
     <div align="center">
     <font class="box_textshadow" color="white" value="{{name}}, you are awesome!">{{name}}, {{greeting}}</font>
     </div>
     </h1>
     </div>
+    {% if youtube %}
     <div align="center" id="video">
-    <audio autoplay="autoplay" 
-        <source src={{theme.song_path}} type="audio/mpeg">
-    </audio>
-    <!--<embed src="http://www.youtube.com/v/CKHgwVYVdWQ&autoplay=1" type="application/x-shockwave-flash" wmode="transparent" width="400" height="320"></embed> --!>
+        <iframe id="ytplayer" type="text/html" width="0" height="0"
+        src="{{theme.song_path}}?autoplay=1"
+        frameborder="0"/>
+    {% else %}
+        <audio autoplay="autoplay" 
+            <source src={{theme.song_path}} type="audio/mpeg">
+        </audio>
+    {% endif %}
     </div>
 {% endblock %}

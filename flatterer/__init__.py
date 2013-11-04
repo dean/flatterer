@@ -12,7 +12,5 @@ login_manager.setup_app(app)
 db = SQLAlchemy(app)
 db.init_app(app)
 
-import models, views
-
-from views import relay
-app.register_blueprint(relay)
+import models
+import views

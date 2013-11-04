@@ -1,18 +1,13 @@
-from flask import Blueprint, request, render_template, flash, g, session, redirect
-from flask.ext.login import login_user, logout_user, current_user
+from flask import (Blueprint, request, render_template, flash,
+                   g, session, redirect)
+from flask.ext.login import (login_user, logout_user, current_user,
+                             login_required)
 from flatterer import db, app, login_manager
-from forms import Register, AddGender, AddCompliment, AddComplimentee, AddTheme, Get_Info, LoginForm, Relay
-from models import User, Gender, Compliment, Theme, Complimentee, RelaySignup, Time
+from forms import *
+from models import User, Gender, Compliment, Theme, Complimentee
 from random import shuffle
 from functools import wraps
 
-def require_login(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if g.user.is_anonymous():
-            return no_perms("You must be logged in to access this page!")
-        return f(*args, **kwargs)
-    return decorated_function
 
 def require_admin(f):
     @wraps(f)
@@ -22,12 +17,16 @@ def require_admin(f):
         return no_perms("You are not an admin!")
     return decorated_function
 
+
 def require_complimentee_perms(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         complimentee = Complimentee.query.filter_by(url=kwargs['user_url']).first()
         if complimentee:
-            if complimentee.owner is not g.user.id:
+            print complimentee.owner
+            print g.user.id
+            print complimentee.owner == g.user.id
+            if complimentee.owner != g.user.id:
                 return no_perms("You can not edit a complimentee you did not create!")
         else:
             return no_perms("The complimentee you are looking for does not exist!")
@@ -38,18 +37,20 @@ def require_complimentee_perms(f):
 @app.before_request
 def before_request():
     g.user = current_user
-    print current_user
     if g.user is None:
         g.user = User("", "Guest", "")
     g.login_form = LoginForm()
+
 
 @app.route("/")
 def home():
     return render_template("home.html", login_form=g.login_form, user=g.user)
 
+
 @app.route("/no_perms")
 def no_perms(msg):
     return render_template("message.html", login_form=g.login_form, user=g.user, msg=msg)
+
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
@@ -73,10 +74,14 @@ def register():
 
     return render_template('register.html', user=g.user, login_form=g.login_form, form=form, message=message)
 
+
+# For Flask-Login
 @login_manager.user_loader
 def load_user(userid):
     return User.query.filter_by(id=userid).first()
 
+
+# For Flask-Login
 def get_user():
     # A user id is sent in, to check against the session
     # and based on the result of querying that id we
@@ -87,6 +92,8 @@ def get_user():
             return User.query.filter_by(id=session["user_id"]).first()
     return None
 
+
+# TODO: Hash passwords
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     form=LoginForm(request.form, csrf_enabled=False)
@@ -100,11 +107,13 @@ def login():
 
     return redirect("/")
 
+
 @app.route("/logout", methods=['POST'])
 def logout():
     logout_user()
     flash("Logged out successfully!")
     return redirect("/")
+
 
 @app.route("/get_info", methods=["GET", "POST"])
 def get_info():
@@ -116,8 +125,9 @@ def get_info():
     else:
         return render_template("get_info.html", login_form=g.login_form, form=form, user=g.user)
 
+
 @app.route("/add_complimentee", methods=["GET", "POST"])
-@require_login
+@login_required
 def add_complimentee():
     form = AddComplimentee()
     msg = ""
@@ -132,6 +142,7 @@ def add_complimentee():
 
     return render_template('add_complimentee.html', login_form=g.login_form, form=form, user=g.user, msg=msg)
 
+
 @app.route("/add_gender", methods=['GET', 'POST'])
 @require_admin
 def add_gender():
@@ -141,6 +152,7 @@ def add_gender():
         db.session.add(Gender(form.gender.data))
         db.session.commit()
     return render_template('add_gender.html', login_form=g.login_form, form=form, user=g.user)
+
 
 @app.route("/add_compliment", methods=['GET', 'POST'])
 def add_compliment():
@@ -153,8 +165,9 @@ def add_compliment():
     return render_template('add_compliment.html', login_form=g.login_form, form=form,
                         user=g.user, msg=msg)
 
+
 @app.route("/<user_url>/add_compliment", methods=['GET', 'POST'])
-@require_login
+@login_required
 @require_complimentee_perms
 def add_individual_compliment(user_url):
     form = AddCompliment()
@@ -166,8 +179,9 @@ def add_individual_compliment(user_url):
     return render_template('add_compliment.html', name=user.name, url=user_url, login_form=g.login_form, form=form,
                         user=g.user, msg=msg)
 
+
 @app.route("/<user_url>/edit_theme/", methods=['GET', 'POST'])
-@require_login
+@login_required
 @require_complimentee_perms
 def edit_theme(user_url):
     form = AddTheme()
@@ -182,7 +196,7 @@ def edit_theme(user_url):
         theme.song_path = form.song_path.data
         db.session.commit()
         msg = "Theme added successfully!"
-        return redirect(name+'/add_compliment')
+        return redirect(user.url+'/add_compliment')
 
     theme = Theme.query.filter_by(user_id=user.id).first()
     form.theme_path.data = theme.theme_path
@@ -190,8 +204,9 @@ def edit_theme(user_url):
 
     return render_template('edit_theme.html', login_form=g.login_form, form=form, user=g.user, name=user.name)
 
+
 @app.route("/<user_url>/add_theme/", methods=['GET', 'POST'])
-@require_login
+@login_required
 @require_complimentee_perms
 def add_theme(user_url):
     form = AddTheme()
@@ -204,7 +219,8 @@ def add_theme(user_url):
 
     return render_template('add_theme.html', login_form=g.login_form, form=form, user=g.user, name=user.name)
 
-@require_login
+
+@login_required
 @app.route("/list_complimentees", methods=['GET', 'POST'])
 def list_complimentees():
 
@@ -213,6 +229,7 @@ def list_complimentees():
         complimentee.theme = Theme.query.filter_by(user_id=complimentee.id).first()
 
     return render_template("list_complimentees.html", login_form=g.login_form, user=g.user, complimentees=complimentees)
+
 
 @app.route("/compliment/<gender>/<name>", methods=['GET', 'POST'])
 def compliment_gender_name(gender, name):
@@ -225,6 +242,7 @@ def compliment_gender_name(gender, name):
 
     shuffle(compliments)
     return render_template("compliment.html", login_form=g.login_form, name=name, user=g.user, compliments=compliments)
+
 
 @app.route("/control_panel", methods=['GET', 'POST'])
 @require_admin
@@ -256,11 +274,6 @@ def compliment_control_panel():
                             compliment_info=compliment_info, unapproved_comps=unapproved_comps,
                             msg=msg)
 
-def approve_compliments(compliment_ids):
-    for compliment_id in compliment_ids:
-        compliment = session.query(Compliment).filter_by(id=compliment_id).first()
-        compliment.approved = True
-        db.session.commit()
 
 @app.route("/compliment/<user_url>")
 def compliment_individual(user_url):
@@ -269,14 +282,17 @@ def compliment_individual(user_url):
         return no_perms("The user you are trying to compliment does not exist!")
     compliments = Compliment.query.filter_by(user_id=user.id).all()
     theme = Theme.query.filter_by(user_id=user.id).first()
+    print theme.theme_path
     if theme:
         youtube = str(theme.song_path).count("youtube")
+        theme.song_path = theme.song_path.replace("watch?v=", "embed/")
     if compliments:
         greeting = Complimentee.query.filter_by(id=user.id).first().greeting
         return render_template("compliment_individual.html", user=g.user, login_form=g.login_form, youtube=youtube,
                                 greeting=greeting, name=user.name, theme=theme, compliments=compliments)
     else:
         return "The name you provided is not in the database!"
+
 
 def add_compliment(form, user_id=None):
     if user_id:
@@ -298,11 +314,13 @@ def remove_compliments(compliment_ids):
         db.session.delete(remove)
     db.session.commit()
 
+
 def approve_compliments(compliment_ids):
     for compliment_id in compliment_ids:
         compliment = Compliment.query.filter_by(id=compliment_id).first()
         compliment.approved = True
     db.session.commit()
+
 
 def check_for_complimentee(url):
     return Complimentee.query.filter_by(url=url).first()

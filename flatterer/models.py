@@ -2,6 +2,7 @@ from flatterer import db
 from flask.ext.sqlalchemy import SQLAlchemy
 from datetime import datetime, date, time, timedelta
 
+
 class User(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
@@ -28,13 +29,14 @@ class User(db.Model):
         self.password = password
         self.admin = admin
 
+
 class Complimentee(db.Model):
     __tablename__ = 'complimentee'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50), unique=True) #Change unique to false
+    name = db.Column(db.String(50), unique=True)  # Change unique to false
     url = db.Column(db.String(50), unique=True)
     greeting = db.Column(db.String(1000))
-    owner = db.Column(db.Integer) # Id for user
+    owner = db.Column(db.Integer)  # Id for user
 
     def __init__(self, name, url, owner, greeting=None):
         self.name = name
@@ -42,13 +44,14 @@ class Complimentee(db.Model):
         self.owner = owner
         self.greeting = greeting
 
+
 class Theme(db.Model):
     __tablename__ = "themes"
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('complimentee.id'))
-    #Can be urls to a file on the local computer, or to an local file path
+    # Can be local file paths or urls
     theme_path = db.Column(db.String(255))
-    song_path =  db.Column(db.String(255))
+    song_path = db.Column(db.String(255))
 
     def __init__(self, user_id, theme_path=None, song_path=None):
         self.user_id = user_id
