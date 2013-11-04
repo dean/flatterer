@@ -84,24 +84,3 @@ class Compliment(db.Model):
 
     def __repr__(self):
         return "<Compliment('%s')>" % (self.compliment)
-
-class RelaySignup(db.Model):
-    __tablename__ = 'relay_signups'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100))
-    house = db.Column(db.String(50))
-    time = db.Column(db.String(50))
-
-    def __init__(self, name, house, time):
-        self.name = name
-        self.house = house
-        self.time = time
-
-class Time(db.Model):
-    __tablename__ = 'times'
-
-    id = db.Column(db.Integer, primary_key=True)
-    time = db.Column(db.String(100))
-
-    def __init__(self, time):
-        self.time = time

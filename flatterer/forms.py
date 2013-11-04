@@ -32,7 +32,3 @@ class Get_Info(Form):
 class LoginForm(Form):
     username = TextField('name', [Required()])
     password = PasswordField('password', [Required()])
-
-class Relay(Form):
-    name = TextField('name', [Required()])
-    house = SelectField('house', choices=[('Delta Delta Delta', 'Delta Delta Delta'), ('Acacia', 'Acacia'), ('Sigma Pi', 'Sigma Pi')])

@@ -6,25 +6,6 @@ from models import User, Gender, Compliment, Theme, Complimentee, RelaySignup, T
 from random import shuffle
 from functools import wraps
 
-relay = Blueprint('relay', __name__, url_prefix='/relay')
-
-@relay.route("/signup", methods=["GET", "POST"])
-def signup_sheet():
-
-    timeslot = Time.query.all()
-
-    for time in timeslot:
-        time.form = Relay()
-        if request.method == "POST":
-            if time.time in request.form:
-                db.session.add(RelaySignup(name=time.form.name.data, house=time.form.house.data, time=time.time))
-                db.session.commit()
-            time.form.name.data = ""
-
-        time.users = RelaySignup.query.filter_by(time=time.time).all()
-
-    return render_template("relay_signup.html", user=g.user, login_form=g.login_form, timeslot=timeslot)
-
 def require_login(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
