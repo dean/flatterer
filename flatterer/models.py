@@ -78,6 +78,7 @@ class Compliment(db.Model):
     gender = db.Column(db.String(50), db.ForeignKey('gender.gender'))
     user_id = db.Column(db.Integer, db.ForeignKey('complimentee.id'))
     approved = db.Column(db.Boolean)
+    user = db.relationship("Complimentee", backref=db.backref("compliments"))
 
     def __init__(self, compliment, gender=None, user_id=None, approved=False):
         self.compliment = compliment
