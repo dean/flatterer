@@ -6,17 +6,25 @@
 
 {% block scripts %}
 <script type="text/javascript">
-    $(this).load(function(){
-        var compliments = [{% for compliment in compliments %}"{{compliment.compliment | safe }}",
+    var compliments = [{% for compliment in compliments %}"{{compliment.compliment | safe }}",
         {% endfor %}];
-                for (var i = 0; i < compliments.length; i++) {
-                    if ( confirm("{{name}}, "+compliments[i]) ) {}
-                    else { break; }
-                }
+    var ind = 0;
+    if (compliments.length > 1) {
+        ind++;
+    }
+    function switch_compliment() {
+        if (ind == compliments.length) {
+            ind = 0;
+        }
+        $("#compliment").empty();
+        $("#compliment").append("{{name}}, " + compliments[ind]);
+        ind++;
+    }
+    $(this).load(function(){
+            switch_compliment();
+            var timer = setInterval(switch_compliment, 5000) 
     });
 </script>
-
-</style>
 {% endblock %}
 
 {% block content %}
@@ -45,9 +53,12 @@
         src="{{theme.song_path}}?autoplay=1"
         frameborder="0"/>
     {% else %}
-        <audio autoplay="autoplay" 
+        <audio autoplay="autoplay"> 
             <source src={{theme.song_path}} type="audio/mpeg">
         </audio>
     {% endif %}
+    </div>
+    <div align="center">
+        <h1><font id="compliment" color="white" class="box_textshadow"></font></h1>
     </div>
 {% endblock %}
