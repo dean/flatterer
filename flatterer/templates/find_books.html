@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    <title>Find Books</title>
+{% endblock %}
+
+{% block content %}
+    <script type="text/javascript">
+        //$("#search").on("click", function() {
+        function search() {
+            var term = $("#term").val();
+            term = replaceAll(' ', '+', term);
+            term = replaceAll(':', '+', term);
+            term = replaceAll('"', '', term);
+            term = replaceAll('\'', '', term);
+            term += "+filetype%3Apdf"
+            var google_search_url = "http://www.google.com.pk/search?btnG=1&pws=0&q=";
+            open_tabbed(google_search_url+term);
+        }
+        //});
+
+        function open_tabbed(url) {
+          var win=window.open(url, '_blank');
+          win.focus();
+        }
+
+        function replaceAll(find, replace, str) {
+          return str.replace(new RegExp(escapeRegExp(find), 'g'), replace);
+        }
+
+        function escapeRegExp(str) {
+          return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+        }
+    </script>
+
+    <div class="row_fluid">
+        <h2>Find Textbooks!</h2>
+    </div>
+    </br>
+    <div class="row_fluid">
+        <h3 style="font-weight:normal">Enter your search term: 
+        <input id="term" type="input" placeholder="Title/Author/Other"/>
+        </h3>
+        </br>
+        <input id="search" class="btn-primary btn-large" type="button" onclick="search();" value="Search"/>
+    </div>
+{% endblock %}

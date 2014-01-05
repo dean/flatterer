@@ -51,6 +51,9 @@ def home():
 def no_perms(msg):
     return render_template("message.html", login_form=g.login_form, user=g.user, msg=msg)
 
+@app.route("/find_books")
+def find_books():
+    return render_template("find_books.html", login_form=g.login_form, user=g.user)
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():

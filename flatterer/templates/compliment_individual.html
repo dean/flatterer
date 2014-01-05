@@ -3,7 +3,6 @@
     <title>{{name}}, you are awesome!</title>
 {% endblock %}
 
-
 {% block scripts %}
 <script type="text/javascript">
     var compliments = [{% for compliment in compliments %}"{{compliment.compliment | safe }}",
