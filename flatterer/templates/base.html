@@ -8,6 +8,9 @@
             body {
                 background: url({{url_for('static', filename='BG.jpg') }}) no-repeat fixed;
             }
+            .form-horizontal .control-group {
+                font-size=14px;
+            }
             .container {
                 font-family : "Comic Sans";
             }
@@ -50,7 +53,7 @@
                             <input class="btn" type="submit" value="Logout"></input>
                         </form>
                         <p class="navbar-text pull-right">
-                            Logged in as: <a href="/me">{{user.name}}</a>
+                            Logged in as: <a href="/list_complimentees">{{user.name}}</a>
                         </p>
                     </div>
                 </div>

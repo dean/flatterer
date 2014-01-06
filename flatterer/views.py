@@ -280,12 +280,13 @@ def compliment_control_panel():
 
 @app.route("/compliment/<user_url>")
 def compliment_individual(user_url):
+    youtube = 0
     user = check_for_complimentee(user_url)
     if not user:
         return no_perms("The user you are trying to compliment does not exist!")
     compliments = Compliment.query.filter_by(user_id=user.id).all()
     theme = Theme.query.filter_by(user_id=user.id).first()
-    print theme.theme_path
+    #print theme.theme_path
     if theme:
         youtube = str(theme.song_path).count("youtube")
         theme.song_path = theme.song_path.replace("watch?v=", "embed/")

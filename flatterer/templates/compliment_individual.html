@@ -28,7 +28,7 @@
 
 {% block content %}
 
-    {% if theme.theme_path %}
+    {% if theme and theme.theme_path %}
     <style type="text/css">
         body {
             background: url({{theme.theme_path}});
@@ -46,18 +46,19 @@
     </div>
     </h1>
     </div>
+    <div align="center">
+        <h1><font id="compliment" color="white" class="box_textshadow"></font></h1>
+    </div>
     {% if youtube %}
+    </br></br></br></br></br></br>
     <div align="center" id="video">
-        <iframe id="ytplayer" type="text/html" width="0" height="0"
+        <iframe id="ytplayer" type="text/html" width="600" height="450"
         src="{{theme.song_path}}?autoplay=1"
         frameborder="0"/>
+    </div>
     {% else %}
         <audio autoplay="autoplay"> 
             <source src={{theme.song_path}} type="audio/mpeg">
         </audio>
     {% endif %}
-    </div>
-    <div align="center">
-        <h1><font id="compliment" color="white" class="box_textshadow"></font></h1>
-    </div>
-{% endblock %}
+    {% endblock %}

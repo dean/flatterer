@@ -11,11 +11,11 @@
 	    Gender: {{form.gender}}</br>
 	{% endif %}
     </br>
-    <input type="submit"></input>
+    <input class="btn" type="submit"></input>
     </form>
     {% if url %}
     <form action="/compliment/{{url}}" method="GET">
-        <input type="submit" value="View Compliment Page"></input>
+        <input class="btn" type="submit" value="View Compliment Page"></input>
     </form>
     {% endif %}
     {% if msg %}

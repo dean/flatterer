@@ -5,8 +5,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="hero-unit">
-    <font size=16>Complimentees</font>
+    <h1 style="font-weight:normal">Complimentees</h1>
     </br></br>
     <table class="table">
         <tr>
@@ -19,19 +18,18 @@
                 <td> <a href="/compliment/{{complimentee.url}}">{{complimentee.name}}</a></td>
             {% if complimentee.theme %}
                 <form action="{{complimentee.url}}/edit_theme" method="GET">
-                    <td> <input type="submit" value="Edit Theme"> </input> </td>
+                    <td> <input class="btn" type="submit" value="Edit Theme"> </input> </td>
                 </form>
             {% else %}
                 <form action="{{complimentee.url}}/add_theme" method="GET">
-                    <td> <input type="submit" value="Add Theme"> </input> </td>
+                    <td> <input class="btn" type="submit" value="Add Theme"> </input> </td>
                 </form>
             {% endif %}
             <form action="{{complimentee.url}}/add_compliment" method="GET">
-                <td> <input type="submit" value="Add Compliment"> </td>
+                <td> <input class="btn" type="submit" value="Add Compliment"> </td>
             </form>
         </tr>
         {% endfor %}
     </table>
     </br></br>
 {% endblock %}
-</div>
