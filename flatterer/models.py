@@ -4,6 +4,7 @@ from datetime import datetime, date, time, timedelta
 
 
 class User(db.Model):
+    """Describes a user."""
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), unique=True)
@@ -31,6 +32,7 @@ class User(db.Model):
 
 
 class Complimentee(db.Model):
+    """Describes the reciever of a compliment."""
     __tablename__ = 'complimentee'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), unique=True)  # Change unique to false
@@ -46,6 +48,7 @@ class Complimentee(db.Model):
 
 
 class Theme(db.Model):
+    """Describes special elements for pages generated for individuals."""
     __tablename__ = "themes"
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('complimentee.id'))
@@ -60,6 +63,7 @@ class Theme(db.Model):
 
 
 class Gender(db.Model):
+    """Describes a gender."""
     __tablename__ = 'gender'
     id = db.Column(db.Integer, primary_key=True)
     gender = db.Column(db.String(50), unique=True)
@@ -72,6 +76,7 @@ class Gender(db.Model):
 
 
 class Compliment(db.Model):
+    """Describes a compliment, who it belongs too, and who recieved it."""
     __tablename__ = 'compliments'
     id = db.Column(db.Integer, primary_key=True)
     compliment = db.Column(db.String(255))
