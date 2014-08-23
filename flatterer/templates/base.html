@@ -28,9 +28,9 @@
 
         {% endblock %}
     </head>
-   <body class="container">
+   <body class="container" style="width:100%">
         {% if user.name %}
-            <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="navbar navbar-inverse navbar-top">
                 <div class="navbar-inner">
                     <div class="container">
                         <ul class="nav">
@@ -40,17 +40,17 @@
                             <li>
                                 <a href="/list_complimentees">My Complimentees</a>
                             </li>
+                            <li>
+                                <a href="/add_complimentee">Add Complimentee</a>
+                            </li>
                             {% if user.admin %}
                                 <li>
                                     <a href="/control_panel">Manage Compliments</a>
                                 </li>
                             {% endif %}
-                            <li>
-                                <a href="/add_complimentee">Add Complimentee</a>
-                            </li>
                         </ul>
-                        <form action="/logout" method="POST" style="padding-left: 25px" class="navbar-form pull-right">
-                            <input class="btn" type="submit" value="Logout"></input>
+                        <form action="/logout" method="POST" style="padding-left: 25px; padding-top:5px" class="navbar-form pull-right">
+                            <input class="btn" type="submit" style="height: 20px; padding: 0px 10px 10px 10px" value="Logout"></input>
                         </form>
                         <p class="navbar-text pull-right">
                             Logged in as: <a href="/list_complimentees">{{user.name}}</a>
@@ -60,7 +60,7 @@
             </div>
         {% else %}
         <!-- Navbar for users who are NOT logged in. -->
-        <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="navbar navbar-inverse navbar-top">
             <div class="navbar-inner">
                 <div class="container">
                     <ul class="nav">
