@@ -1,9 +1,15 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<div style="margin:0 auto; text-align:center">
 <form method="POST">
+<div>
 Name: {{form.name}}
+</div>
+<div style="padding-bottom:15px">
 Gender: {{form.gender}}
-<input type="Submit" value="Flatter Me!"></input>
+</div>
+<input type="Submit" class="btn" value="Flatter Me!"></input>
 </form>
+</div>
 {% endblock %}

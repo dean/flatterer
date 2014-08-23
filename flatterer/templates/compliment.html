@@ -15,25 +15,28 @@
             ind = 0;
         }
         $("#compliment").empty();
-        $("#compliment").append("{{name}}, " + compliments[ind]);
+        $("#compliment").append(capitalize(compliments[ind]));
         ind++;
     }
     $(this).load(function(){
             switch_compliment();
             var timer = setInterval(switch_compliment, 5000) 
     });
+
+    function capitalize(sentence) {
+        return sentence.charAt(0).toUpperCase() + sentence.slice(1);
+    }
 </script>
 {% endblock %}
 
 {% block content %}
     <body class="container" background="http://khongthe.com/wallpapers/nature/a-beautiful-scene-243788.jpg">
-    <div class="hero-unit">
-    <h1>
+    <h1 style="text-align:center">
         <font class="box_textshadow" color="white" value="{{name}}, you are awesome!">{{name}}, you are awesome!</font>
     </h1>
-    </div>
-    <div class="center">
-        <h1><font id="compliment" class="box_textshadow" color="white"></font></h1>
-    </div>
+
+    <div class="hero-unit">
+    </br>
+        <h1 style="text-align:center"><font id="compliment" class="box_textshadow" color="white"></font></h1>
     </body>
 {% endblock %}
