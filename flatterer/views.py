@@ -1,12 +1,14 @@
+from random import shuffle
+from functools import wraps
+
+from flatterer import db, app, login_manager
+from forms import *
+from models import User, Gender, Compliment, Theme, Complimentee
+
 from flask import (Blueprint, request, render_template, flash,
                    g, session, redirect)
 from flask.ext.login import (login_user, logout_user, current_user,
                              login_required)
-from flatterer import db, app, login_manager
-from forms import *
-from models import User, Gender, Compliment, Theme, Complimentee
-from random import shuffle
-from functools import wraps
 
 
 def require_admin(f):
