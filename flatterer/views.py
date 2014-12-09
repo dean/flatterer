@@ -373,7 +373,7 @@ def add_compliment(form, user_id=None):
 def remove_compliments(compliment_ids):
     """Batch removes compliments based on their ids."""
     removals = (db.session.query(Compliment)
-                    .filter(User.id._in(compliment_ids)).all())
+                    .filter(Compliment.id.in_(compliment_ids)).all())
     for removal in removals:
         db.session.delete(removal)
     db.session.commit()
@@ -381,8 +381,9 @@ def remove_compliments(compliment_ids):
 
 def approve_compliments(compliment_ids):
     """Batch approve compliments."""
-    for compliment_id in compliment_ids:
-        compliment = Compliment.query.filter_by(id=compliment_id).first()
+    approvals = (db.session.query(Compliment)
+                    .filter(Compliment.id.in_(compliment_ids)).all())
+    for compliment in approvals:
         compliment.approved = True
     db.session.commit()
 
