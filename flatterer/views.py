@@ -155,7 +155,8 @@ def add_complimentee():
 
     msg = ""
     if request.method == "POST":
-        if not Complimentee.query.filter_by(url=form.url.data).first():
+        exists = Complimentee.query.filter_by(url=form.url.data).first()
+        if url and not exists:
             complimentee = Complimentee(form.name.data,
                                         form.url.data,
                                         owner=g.user.id,
