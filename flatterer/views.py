@@ -116,7 +116,7 @@ def login():
     if form.validate_on_submit():
         # login and validate the user...
         user = User.query.filter_by(username=form.username.data).first()
-        if user and user.check_password(password,form.password.data):
+        if user and user.check_password(form.password.data):
             login_user(user)
             flash("Logged in successfully.")
             print "User=" + user.name
