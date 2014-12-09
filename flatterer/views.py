@@ -116,7 +116,7 @@ def login():
     if form.validate_on_submit():
         # login and validate the user...
         user = User.query.filter_by(username=form.username.data).first()
-        if user and user.password == form.password.data:
+        if user and user.check_password(password,form.password.data):
             login_user(user)
             flash("Logged in successfully.")
             print "User=" + user.name
@@ -268,10 +268,6 @@ def list_complimentees():
     """List complimentees for a given account."""
 
     complimentees = Complimentee.query.filter_by(owner=g.user.id).all()
-    for complimentee in complimentees:
-        theme = Theme.query.filter_by(user_id=complimentee.id).first()
-        complimentee.theme = theme
-
     return render_template("list_complimentees.html", login_form=g.login_form,
                            user=g.user, complimentees=complimentees)
 
@@ -373,9 +369,10 @@ def add_compliment(form, user_id=None):
 
 def remove_compliments(compliment_ids):
     """Batch removes compliments based on their ids."""
-    for compliment_id in compliment_ids:
-        remove = Compliment.query.filter_by(id=compliment_id).first()
-        db.session.delete(remove)
+    removals = (db.session.query(Compliment)
+                    .filter(User.id._in(compliment_ids)).all())
+    for removal in removals:
+        db.session.delete(removal)
     db.session.commit()
 
 

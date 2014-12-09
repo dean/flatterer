@@ -62,6 +62,8 @@ class Theme(db.Model):
     theme_path = db.Column(db.String(255))
     song_path = db.Column(db.String(255))
 
+    complimentee = db.relationship('Complimentee', backref='theme')
+
     def __init__(self, user_id, theme_path=None, song_path=None):
         self.user_id = user_id
         self.theme_path = theme_path
